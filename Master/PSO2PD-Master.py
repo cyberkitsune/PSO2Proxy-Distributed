@@ -1,28 +1,30 @@
 import redis
 import json
-from ProxyServer import ProxyServer
+import struct
+import socket
+import io
+from ProxyServer import ProxyServers
+from PSO2Protocols import shipdata
 from ServerCommands import CommandHandlers
-
-
-def gchat_handler(message):
-    pass
-
-def servercomm_handler(message):
-    msgobj = json.loads(message['data'])
-    if 'command' in msgobj and msgobj['command'] in CommandHandlers:
-        CommandHandlers[msgobj['command']](msgobj)
-    else:
-        print("Got unknown data on channel %s: %s" % (message['channel'], message['data']))
+from ProxyRedis import p
 
 
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
-p = r.pubsub(ignore_subscribe_messages=True)
+print("=== PSO2Proxy-Distributed master server starting...")
 
-p.psubscribe("proxy-server-*")
-p.subscribe(**{'gchat': gchat_handler})
+rthread = p.run_in_thread(sleep_time=0.001)
+print("[Redis] Messaging thread running.")
 
-print("PSO2Proxy-Distributed master server starting...")
+print("[PSO2PD] Getting ship statuses...")
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-for message in p.listen():
-    print("[Redis] Got a message!")
+try:
+    s.connect(("210.189.208.1", 12199))  # Un-hardcode this!
+    shipdata.write(s.recv(4))
+    size = struct.unpack_from("i", shipdata.getvalue())[0]
+    shipdata.write(s.recv(size - 4))
+
+except:
+    print("[PSO2PD] I got an error :(")
+
+print("[PSO2PD] Cached ship query.")
