@@ -33,6 +33,9 @@ class BlockSender(protocol.Protocol):
         pass
 
     def connectionMade(self):
+        if len(ProxyServers) < 1:
+            self.transport.loseConnection()
+            return
         server = sorted(ProxyServers.values(), key=get_users)[0]
         o1, o2, o3, o4 = server.address.split(".")
         buf = bytearray()
