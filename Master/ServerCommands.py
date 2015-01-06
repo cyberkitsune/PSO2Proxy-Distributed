@@ -30,3 +30,10 @@ def del_server(messageobj):
 def ping(messageobj):
     if messageobj['name'] in ProxyServers:
         ProxyServers[messageobj['name']].users = messageobj['usercount']
+
+        from WebAPI import peakPlayers
+        count = 0
+        for server in ProxyServers:
+            count += server.users
+        if count > peakPlayers:
+            peakPlayers = count

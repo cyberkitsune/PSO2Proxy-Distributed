@@ -4,6 +4,8 @@ import socket
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ServerEndpoint
 
+from WebAPI import setup_web
+
 from PSO2Protocols import shipdata, ShipInfoFactory, BlockSenderFactory
 from ProxyRedis import p
 
@@ -38,5 +40,7 @@ for x in xrange(0, 10):
     endpoint.listen(ShipInfoFactory())
 
 print("[PSO2PD] Reactor started.")
+
+setup_web()
 
 reactor.run()
