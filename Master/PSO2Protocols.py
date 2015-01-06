@@ -1,4 +1,8 @@
 from twisted.internet import protocol
+from ProxyServer import ProxyServers
+
+import struct
+import operator
 import io
 
 shipdata = io.BytesIO()
@@ -26,9 +30,19 @@ class BlockSender(protocol.Protocol):
         pass
 
     def connectionMade(self):
-        # Get some IP
-        ip = "127.0.0.1"
-        # Do stuff
+        server = sorted(ProxyServers, key=operator.attrgetter('users')).reverse()[0]
+        o1, o2, o3, o4 = server.address.split(".")
+        buf = bytearray()
+        buf += struct.pack('i', 0x90)
+        buf += struct.pack('BBBB', 0x11, 0x2C, 0x0, 0x0)
+        buf += struct.pack('92x')  # lol SEGA
+        buf += struct.pack('BBBB', int(o1), int(o2), int(o3), int(o4))
+        buf += struct.pack('H', self.transport.getHost().port)
+        buf += struct.pack('38x')
+
+        print("[BlockSend] Sending client to server %s currently with %i users." % (server.name, server.users))
+        self.transport.write(str(buf))
+        self.transport.loseConnection()
 
 
 class BlockSenderFactory(protocol.Factory):

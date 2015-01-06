@@ -1,13 +1,11 @@
-import redis
-import json
 import struct
 import socket
-import io
-from ProxyServer import ProxyServers
-from PSO2Protocols import shipdata
-from ServerCommands import CommandHandlers
-from ProxyRedis import p
 
+from twisted.internet import reactor
+from twisted.internet.endpoints import TCP4ServerEndpoint
+
+from PSO2Protocols import shipdata, ShipInfoFactory, BlockSenderFactory
+from ProxyRedis import p
 
 
 print("=== PSO2Proxy-Distributed master server starting...")
@@ -28,3 +26,17 @@ except:
     print("[PSO2PD] I got an error :(")
 
 print("[PSO2PD] Cached ship query.")
+
+print("[PSO2PD] Starting reactors...")
+
+for x in xrange(0, 10):
+    endpoint = TCP4ServerEndpoint(reactor, 12000 + (100 * x))
+    endpoint.listen(BlockSenderFactory())
+
+for x in xrange(0, 10):
+    endpoint = TCP4ServerEndpoint(reactor, 12099 + (100 * x))
+    endpoint.listen(ShipInfoFactory())
+
+print("[PSO2PD] Reactor started.")
+
+reactor.run()
