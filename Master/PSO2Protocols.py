@@ -2,7 +2,6 @@ from twisted.internet import protocol
 from ProxyServer import ProxyServers
 
 import struct
-import operator
 import io
 
 shipdata = io.BytesIO()
@@ -25,12 +24,16 @@ class ShipInfoFactory(protocol.Factory):
         return ShipInfo()
 
 
+def get_users(server):
+    return server.users
+
+
 class BlockSender(protocol.Protocol):
     def __init__(self):
         pass
 
     def connectionMade(self):
-        server = sorted(ProxyServers, key=operator.attrgetter('users')).reverse()[0]
+        server = sorted(ProxyServers.values(), key=get_users)[0]
         o1, o2, o3, o4 = server.address.split(".")
         buf = bytearray()
         buf += struct.pack('i', 0x90)
