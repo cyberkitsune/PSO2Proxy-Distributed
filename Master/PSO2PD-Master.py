@@ -1,6 +1,7 @@
 import os
 import struct
 import socket
+from twisted.internet import stdio
 
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ServerEndpoint
@@ -33,6 +34,7 @@ class ServerConsole(basic.LineReceiver):
                 Commands[command](line)
         else:
             print("[PSO2PD] Command not found.")
+        self.transport.write('>>> ')
 
 print("=== PSO2Proxy-Distributed master server starting...")
 
@@ -62,6 +64,8 @@ for x in xrange(0, 10):
 for x in xrange(0, 10):
     endpoint = TCP4ServerEndpoint(reactor, 12099 + (100 * x))
     endpoint.listen(ShipInfoFactory())
+
+stdio.StandardIO(ServerConsole())
 
 print("[PSO2PD] Reactor started.")
 
