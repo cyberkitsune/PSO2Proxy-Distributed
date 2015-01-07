@@ -72,7 +72,7 @@ stdio.StandardIO(ServerConsole())
 print("[PSO2PD] Reactor started.")
 
 print("[PSO2PD] Announcing presence...")
-r.publish("proxy-server-*", json.dumps({'command': "register"}))
+r.publish("proxy-global", json.dumps({'command': "register"}))
 
 setup_web()
 
