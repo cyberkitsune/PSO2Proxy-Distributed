@@ -1,14 +1,38 @@
+import os
 import struct
 import socket
 
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ServerEndpoint
+from twisted.protocols import basic
 
 from WebAPI import setup_web
 
 from PSO2Protocols import shipdata, ShipInfoFactory, BlockSenderFactory
+from Commands import Commands
 from ProxyRedis import p
 
+
+class ServerConsole(basic.LineReceiver):
+    def __init__(self):
+        self.delimiter = os.linesep
+
+    def connectionMade(self):
+        self.transport.write('>>> ')
+
+    def lineReceived(self, line):
+        """
+
+        :type line: str
+        """
+        command = line.split(' ')[0]
+        if command in Commands:
+            if len(line.split(' ')) > 1:
+                Commands[command](line.split(' ', 1)[1])
+            else:
+                Commands[command](line)
+        else:
+            print("[PSO2PD] Command not found.")
 
 print("=== PSO2Proxy-Distributed master server starting...")
 
