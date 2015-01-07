@@ -1,3 +1,4 @@
+import json
 import os
 import struct
 import socket
@@ -11,7 +12,7 @@ from WebAPI import setup_web
 
 from PSO2Protocols import shipdata, ShipInfoFactory, BlockSenderFactory
 from Commands import Commands
-from ProxyRedis import p
+from ProxyRedis import p, r
 
 
 class ServerConsole(basic.LineReceiver):
@@ -69,6 +70,9 @@ for x in xrange(0, 10):
 stdio.StandardIO(ServerConsole())
 
 print("[PSO2PD] Reactor started.")
+
+print("[PSO2PD] Announcing presence...")
+r.publish("proxy-server-*", json.dumps({'command': "register"}))
 
 setup_web()
 
