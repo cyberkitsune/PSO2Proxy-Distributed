@@ -39,6 +39,8 @@ class ServerConsole(basic.LineReceiver):
 print("=== PSO2Proxy-Distributed master server starting...")
 
 rthread = p.run_in_thread(sleep_time=0.001)
+rthread.daemon = True
+
 print("[Redis] Messaging thread running.")
 
 print("[PSO2PD] Getting ship statuses...")
