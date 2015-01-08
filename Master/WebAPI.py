@@ -85,7 +85,7 @@ class WEBRcon(Resource):
             else:
                 try:
                     if request.args['command'][0] in Commands:
-                        Commands[request.args['command']]()
+                        Commands[request.args['command'][0]](request.args['params'][0] if 'params' in request.args else None)
                         return json.dumps({'success': True, 'output': "Command sent."})
                     else:
                         return json.dumps({'success': False, 'reason': "Command not found."})
