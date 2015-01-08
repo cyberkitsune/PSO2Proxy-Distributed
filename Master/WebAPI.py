@@ -5,7 +5,7 @@ from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.web import server
 from twisted.web.resource import Resource
-from Master.Config import YAMLConfig
+from Config import YAMLConfig
 from ProxyServer import ProxyServers
 
 import json
@@ -14,7 +14,9 @@ import os
 upStart = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 peakPlayers = 0
 
-web_config = YAMLConfig("web.cfg.yaml", {"hostname": "example.com", "port": 8080, "servername": "PSO2Proxy Public Network", "rconpass": "changeme"}, True)
+web_config = YAMLConfig("web.cfg.yaml",
+                        {"hostname": "example.com", "port": 8080, "servername": "PSO2Proxy Public Network",
+                         "rconpass": "changeme"}, True)
 
 hostName = web_config['hostname']
 port = web_config['port']
@@ -73,6 +75,7 @@ class WEBRcon(Resource):
 
     def render_GET(self, request):
         from Commands import Commands
+
         request.setHeader('content-type', "application/json")
         if 'key' not in request.args or request.args['key'][0] != web_config['rconpass']:
             return json.dumps({'success': False, 'reason': "Your RCON key is invalid!"})
@@ -89,7 +92,6 @@ class WEBRcon(Resource):
                 except:
                     e = traceback.format_exc()
                     return json.dumps({'success': False, 'reason': "Error executing command\n%s" % e})
-
 
 
 def setup_web():
