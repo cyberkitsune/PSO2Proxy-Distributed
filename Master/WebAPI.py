@@ -4,6 +4,7 @@ from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.web import server
 from twisted.web.resource import Resource
+from Master.Config import YAMLConfig
 from ProxyServer import ProxyServers
 
 import json
@@ -12,9 +13,11 @@ import os
 upStart = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 peakPlayers = 0
 
-hostName = "example.com"
-port = 8080
-serverName = "PSO2Proxy Public Network"
+web_config = YAMLConfig("web.cfg.yaml", {"hostname": "example.com", "port": 8080, "servername": "PSO2Proxy Public Network"}, True)
+
+hostName = web_config['hostname']
+port = web_config['port']
+serverName = web_config['servername']
 
 
 class JSONConfig(Resource):
