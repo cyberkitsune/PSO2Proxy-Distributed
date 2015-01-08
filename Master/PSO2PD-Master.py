@@ -12,7 +12,7 @@ from WebAPI import setup_web
 
 from PSO2Protocols import shipdata, ShipInfoFactory, BlockSenderFactory
 from Commands import Commands
-from ProxyRedis import p, r
+from ProxyRedis import p, r, redis_config
 
 
 class ServerConsole(basic.LineReceiver):
@@ -60,11 +60,11 @@ print("[PSO2PD] Cached ship query.")
 print("[PSO2PD] Starting reactors...")
 
 for x in xrange(0, 10):
-    endpoint = TCP4ServerEndpoint(reactor, 12000 + (100 * x))
+    endpoint = TCP4ServerEndpoint(reactor, 12000 + (100 * x), interface=redis_config['bindip'])
     endpoint.listen(BlockSenderFactory())
 
 for x in xrange(0, 10):
-    endpoint = TCP4ServerEndpoint(reactor, 12099 + (100 * x))
+    endpoint = TCP4ServerEndpoint(reactor, 12099 + (100 * x), interface=redis_config['bindip'])
     endpoint.listen(ShipInfoFactory())
 
 stdio.StandardIO(ServerConsole())

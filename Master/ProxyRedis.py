@@ -4,7 +4,7 @@ import json
 
 from Config import YAMLConfig
 
-redis_config = YAMLConfig("redis.cfg.yaml", {'db_host': "localhost", 'db_port': 6379, 'db_id': 0, 'db_pass': ''})
+redis_config = YAMLConfig("redis.cfg.yaml", {'bindip': "0.0.0.0", 'db_host': "localhost", 'db_port': 6379, 'db_id': 0, 'db_pass': ''})
 
 def plugin_handler(message):
     print("[PLUGINMSG] Got plugin message on channel %s: %s" % (message['channel'], message['data']))
