@@ -49,7 +49,7 @@ class WebAPI(Resource):
     @staticmethod
     def render_GET(request):
         playerCount = 0
-        for server in ProxyServers:
+        for server in ProxyServers.values():
             playerCount += server.users
 
         current_data = {'playerCount': playerCount,
