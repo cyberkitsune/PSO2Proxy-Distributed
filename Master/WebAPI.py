@@ -55,12 +55,14 @@ class WebAPI(Resource):
     @staticmethod
     def render_GET(request):
         playerCount = 0
+        servers = []
         for server in ProxyServers.values():
             playerCount += server.users
+            servers.append({'name': server.name, 'players': server.users, 'ip': server.address, 'enabled': server.enabled})
 
         current_data = {'playerCount': playerCount,
                         'upSince': upStart,
-                        'peakPlayers': peakPlayers}
+                        'peakPlayers': peakPlayers, 'servers': servers}
         request.setHeader("content-type", "application/json")
         return json.dumps(current_data)
 
