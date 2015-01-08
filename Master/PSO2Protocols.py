@@ -36,7 +36,15 @@ class BlockSender(protocol.Protocol):
         if len(ProxyServers) < 1:
             self.transport.loseConnection()
             return
-        server = sorted(ProxyServers.values(), key=get_users)[0]
+        servers = sorted(ProxyServers.values(), key=get_users)
+        server = None
+        for pserver in servers:
+            if pserver.enabled:
+                server = pserver
+                break
+        if server is None:
+            self.transport.loseConnection()
+            return
         o1, o2, o3, o4 = server.address.split(".")
         buf = bytearray()
         buf += struct.pack('i', 0x90)

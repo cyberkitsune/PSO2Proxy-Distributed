@@ -25,5 +25,15 @@ def allexec(line):
 def list(line):
     from ProxyServer import ProxyServers
     for server in ProxyServers.values():
-        print("[List] Server \"%s\" - Usercount %i" % (server.name, server.users))
+        print("[List] Server \"%s\" - Usercount %i - Enabled %s" % (server.name, server.users, server.enabled))
     print("[List] %i proxy servers connected in total." % len(ProxyServers))
+
+
+@CommandHandler("disable")
+def disable(line):
+    from ProxyServer import ProxyServers
+    if line in ProxyServers:
+        ProxyServers[line].enabled = not ProxyServers[line].enabled
+        print("Toggled %s enable state." % ProxyServers[line].name)
+    else:
+        print("Not a proxy server")

@@ -7,3 +7,4 @@ class ProxyServer:
         self.address = address
         self.name = name
         self.users = 0
+        self.enabled = True
