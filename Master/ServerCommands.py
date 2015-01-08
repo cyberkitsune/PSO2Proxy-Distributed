@@ -33,7 +33,7 @@ def ping(messageobj):
 
         from WebAPI import peakPlayers
         count = 0
-        for server in ProxyServers:
+        for server in ProxyServers.values():
             count += server.users
         if count > peakPlayers:
             peakPlayers = count
