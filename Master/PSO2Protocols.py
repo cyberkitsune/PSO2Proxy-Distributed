@@ -47,6 +47,7 @@ class BlockSender(protocol.Protocol):
         buf += struct.pack('38x')
 
         print("[BlockSend] Sending client to server %s currently with %i users." % (server.name, server.users))
+        server.users += 1
         self.transport.write(str(buf))
         self.transport.loseConnection()
 
