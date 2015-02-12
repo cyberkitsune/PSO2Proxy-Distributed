@@ -49,10 +49,10 @@ class BlockSender(protocol.Protocol):
         buf = bytearray()
         buf += struct.pack('i', 0x90)
         buf += struct.pack('BBBB', 0x11, 0x2C, 0x0, 0x0)
-        buf += struct.pack('92x')  # lol SEGA
+        buf += struct.pack('96x')  # lol SEGA
         buf += struct.pack('BBBB', int(o1), int(o2), int(o3), int(o4))
         buf += struct.pack('H', self.transport.getHost().port)
-        buf += struct.pack('38x')
+        buf += struct.pack('34x')
 
         print("[BlockSend] Sending client to server %s currently with %i users." % (server.name, server.users))
         server.users += 1
